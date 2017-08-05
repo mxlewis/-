@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        *{
+            margin: 0px;
+            padding: 0;
+        }
+        li{
+            list-style: none;
+        }
+        .clearfix{
+            *zoom:1;
+        }
+        .clearfix:after{
+            content: "";
+            display: block;
+            clear: both;
+        }
+        .fr{
+            float: right;
+        }
+        .fl{
+            float: left;
+        }
+        .bg{
+            width: 1000px;
+            height: 667px;
+            border: 1px solid black;
+            background: url("image/随意拖拽bg.png") no-repeat;
+            margin: 0 auto;
+            position: relative;
+        }
+        .box{
+            width: 532px;
+            height: 318px;
+            position: absolute;
+            left: 234px;
+            top: 177px;
+        }
+        .left{
+            width: 158px;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .btn{
+            width: 90px;
+            height: 40px;
+            border: 2px solid #fff;
+            border-radius: 5px;
+            color: #fff;
+            text-align: center;
+            line-height: 40px;
+        }
+        ul{
+            width: 374px;
+            height: 100%;
+            position: relative;
+        }
+        li{
+            width: 78.5px;
+            margin-right: 14.5px;
+            margin-top: 19px;
+        }
+        li img{
+            width: 78.5px;
+        }
+    </style>
+</head>
+<body>
+<script src="utils.js"></script>
+<div class="bg">
+    <div class="box clearfix">
+        <div class="left fl">
+            <div class="btn">随机</div>
+        </div>
+        <ul class="right fl clearfix">
+            <li class="fl"data-index="0"><img src="image/1.png"></li>
+            <li class="fl"data-index="1"><img src="image/2.png"></li>
+            <li class="fl"data-index="2"><img src="image/3.png"></li>
+            <li class="fl"data-index="3"><img src="image/4.png"></li>
+            <li class="fl"data-index="4"><img src="image/5.png"></li>
+            <li class="fl"data-index="5"><img src="image/6.png"></li>
+            <li class="fl"data-index="6"><img src="image/7.png"></li>
+            <li class="fl"data-index="7"><img src="image/8.png"></li>
+            <li class="fl"data-index="8"><img src="image/9.png"></li>
+            <li class="fl"data-index="9"><img src="image/10.png"></li>
+            <li class="fl"data-index="10"><img src="image/11.png"></li>
+            <li class="fl"data-index="11"><img src="image/12.png"></li>
+        </ul>
+    </div>
+</div>
+<script>
+    var _ul=document.querySelector('.right');
+    var lis=document.querySelectorAll('.right li');
+    var arr=[];
+
+    window.onload=function(){
+        //保存一下每个li的left和top值
+        for(var i=0;i<lis.length;i++){
+            arr.push([lis[i].offsetLeft,lis[i].offsetTop])
+        }
+
+//浮动转定位
+        for(var i=0;i<arr.length;i++){
+            lis[i].style.margin=0;
+            lis[i].style.position='absolute';
+            lis[i].style.left=arr[i][0]+'px';
+            lis[i].style.top=arr[i][1]+'px';
+        }
+    };
+
+
+//点击随机切换图片
+    var btn=document.querySelector('.btn');
+
+    btn.onclick=function(){
+        arr.sort(function(){
+            return Math.random()-0.5
+        });
+        arr.forEach(function(item,index){
+            mTween(lis[index],{left:item[0],top:item[1]},500)
+        })
+    };
+//拖拽
+    for(var i=0;i<lis.length;i++){
+        lis[i].onmousedown=function(ev){
+            ev.preventDefault();
+            this.style.zIndex=1;
+
+            //计算小段距离
+            var disX=ev.clientX-this.getBoundingClientRect().left;
+            var disY=ev.clientY-this.getBoundingClientRect().top;
+
+            var val;
+            var arr1,arr2=[];
+            arr2.push(this.offsetLeft,this.offsetTop,this.dataset.index);
+            //移动跟随鼠标走
+            this.onmousemove=function(ev){
+                var l=ev.clientX-_ul.getBoundingClientRect().left-disX;
+                var t=ev.clientY-_ul.getBoundingClientRect().top-disY;
+
+                if(l<0){
+                    l=0
+                }
+                if(l>_ul.clientWidth-this.offsetWidth){
+                    l=_ul.clientWidth-this.offsetWidth
+                }
+                if(t<0){
+                    t=0
+                }
+                if(t>_ul.clientHeight-this.offsetHeight){
+                    t=_ul.clientHeight-this.offsetHeight
+                }
+
+                this.style.left=l+'px';
+                this.style.top=t+'px';
+
+                var arr=[];
+                for(var j=0;j<lis.length;j++){
+                    if(collision.call(this,this,lis[j])){
+                        if(lis[j]!==this){//排除自己
+                            lis[j].style.boxShadow='2px 3px 12px';
+                            arr.push(lis[j])
+                        }
+                    }else{
+                        lis[j].style.boxShadow=''
+                    }
+                }
+            //比较距离最近的那个
+                //算出自己的中心距离
+                var thisX=this.offsetLeft+this.offsetWidth;//x轴
+                var thisY=this.offsetTop+this.offsetHeight;//y轴
+
+                var min=+Infinity;
+
+                for(var k=0;k<arr.length;k++){//每个被碰撞到的x和y
+                    var x=arr[k].offsetLeft+arr[k].offsetWidth;
+                    var y=arr[k].offsetTop+arr[k].offsetHeight;
+                    //差值
+                    var distanceX=x-thisX;
+                    var distanceY=y-thisY;
+                    var distance=distanceX*distanceX+distanceY*distanceY;
+
+                    if(min>distance){
+                        min=distance;
+                        val=arr[k]
+                    }
+                }
+                arr1=[];
+                if(val){
+                    arr1.push(val.offsetLeft,val.offsetTop,val.dataset.index);
+                }
+            };
+
+            this.onmouseup=function(){
+                mTween(val,{left:arr2[0],top:arr2[1]},200);
+                val.dataset.index=arr2[2];
+                mTween(this,{left:arr1[0],top:arr1[1]},200);
+                this.dataset.index=arr1[2];
+                this.onmousemove=this.onmouseup=null;
+                for(var i=0;i<lis.length;i++){
+                   lis[i].style.boxShadow='';
+                    lis[i].style.zIndex=''
+                }
+            }
+        }
+    }
+
+
+
+    //碰撞检测函数
+    function collision(ele1,ele2){
+        var ele1Rect=ele1.getBoundingClientRect();
+        var ele2Rect=ele2.getBoundingClientRect();
+
+        if(ele1Rect.right<ele2Rect.left||ele1Rect.bottom<ele2Rect.top||ele1Rect.left>ele2Rect.right||ele1Rect.top>ele2Rect.bottom){
+            return false
+        }else{
+            return true
+        }
+    }
+</script>
+</body>
+</html>
