@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        *{
+            margin: 0px;
+            padding: 0;
+        }
+        .clearfix{
+            *zoom:1;
+        }
+        .clearfix:after{
+            content: "";
+            display: block;
+            clear: both;
+        }
+        .fr{
+            float: right;
+        }
+        .fl{
+            float: left;
+        }
+        .bg{
+            width: 1000px;
+            height: 600px;
+            background: url("bg.jpg");
+            margin: 0 auto;
+            padding-top: 100px;
+        }
+        .title,.introduce{
+            font-size: 18px;
+            color: #fff;
+            text-align: center;
+        }
+        .introduce{
+            margin-top: 10px;
+        }
+        .content{
+            width: 692px;
+            height: 416px;
+            padding: 6px;
+            margin: 0 auto;
+            margin-top: 30px;
+            background:url("box_bg.jpg") no-repeat;
+            position: relative;
+        }
+        .scor_box{
+            width: 81px;
+            position: absolute;
+            left: 13px;
+            top: 10px;
+        }
+        .add,.low{
+            width: 80px;
+            height: 81px;
+            border-radius: 50%;
+            border: 1px solid #958ca0;
+            color: #fff;
+            position: relative;
+        }
+        .add span,.low span{
+            position: absolute;
+        }
+        .add span:nth-of-type(1),.low span:nth-of-type(1){
+            left: 27px;
+            top: 20px;
+        }
+        .add span:nth-of-type(2),.low span:nth-of-type(2){
+            left: 25px;
+            top: 43px;
+        }
+        .add{
+            background-color: #78268c;
+        }
+        .low{
+            background-color: #59599f;
+            margin-top: 18px;
+        }
+        .start{
+            width: 158px;
+            height: 49px;
+            background: url("start.png") no-repeat;
+            text-align: center;
+            line-height: 46px;
+            color: #fff;
+            position: absolute;
+            left: 270px;
+            bottom: 32px;
+        }
+        .img{
+            position: absolute;
+            top: 0;
+            display: none;
+        }
+        .save,.louse{
+            font-style: normal;
+        }
+        .game{
+            position: absolute;
+            color: #fff;
+            left: 291px;
+            top: 183px;
+            width: 100px;
+            background-color: blueviolet;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            border-radius: 5px;
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+<div class="bg">
+    <div class="title">你的鼠标有多快？</div>
+    <div class="introduce">游戏说明："点击游戏"，随机掉下表情选中它，千万别让它掉下去</div>
+    <div class="content">
+            <div class="scor_box">
+                <div class="add">
+                    <span><i class="save">0</i>分</span>
+                    <span>得分</span>
+                </div>
+                <div class="low">
+                    <span><i class="louse">0</i>分</span>
+                    <span>失分</span>
+                </div>
+            </div>
+            <div class="start">开始游戏</div>
+            <img src="./5.png" class="img">
+            <div class="game">游戏结束</div>
+    </div>
+</div>
+<script src="utils.js"></script>
+<script>
+    var content=document.querySelector('.content');
+    var start=document.querySelector('.start');
+    var scor_box=document.querySelector('.scor_box');
+    var img=document.querySelector('.img');
+    var save=document.querySelector('.save');
+    var louse=document.querySelector('.louse');
+    var game=document.querySelector('.game');
+
+    var num,m,time;
+//点击开始游戏
+    start.onclick=function(){
+        louse.innerHTML=m=0;
+        save.innerHTML=num=0;
+        time=3000;
+        game.style.display='none';
+        //得分模块左移
+        mTween(scor_box,{left:-93},400,'linear');
+        mTween(start,{bottom:15,opacity:0},400,'linear');
+        //顶部随机下落
+        auto(time);
+    };
+
+
+
+//下落函数
+    function auto(time){
+        //图片归位，下落样子和位置随机
+        img.style.top=0;
+        img.style.left=(Math.random()*544+36)+'px';
+
+        var n=Math.floor(Math.random()*4+1);
+        img.style.display='block';
+        img.src='./'+n+'.png';
+
+        //图片下落
+        mTween(img,{top:363},time,'linear',function(){
+            img.style.display='none';//图片如果没被点中，下落后消失，失分加1，继续随机掉落
+            shake(content,'top',30,function(){
+                m++;
+                louse.innerHTML=m;
+                if(m>=10){
+                    mTween(scor_box,{left:13},200,'linear');
+                    mTween(start,{bottom:32},200,'linear');
+                    game.style.display='block';
+                    return
+                }
+                auto(time);
+            });
+        });
+
+        //图片如果被点中
+        img.onmousedown=function(){
+            img.src='./6.png';//换图片
+            clearInterval(this.timer);//暂停下落
+
+            shake(img,'left',30,function(){//开始抖动，抖完之后消失,再随机下落
+                img.style.display='none';
+                num++;
+                save.innerHTML=num;
+                auto(time);
+            })
+        };
+
+        //下落总时间减少
+        setInterval(function(){
+            time-=30
+        },1000);
+    }
+</script>
+</body>
+</html>
