@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        .bg{
+            width: 900px;
+            height: 500px;
+            background: url("images/bg2.png") no-repeat;
+        }
+        .left_box{
+            width: 370px;
+            height: 318px;
+            background: url("images/bg1.png") no-repeat;
+            position: absolute;
+            left: 120px;
+            top: 165px;
+        }
+        .small_pic{
+            width: 337px;
+            height: 189px;
+            background: url("images/bg.png") no-repeat;
+            position: absolute;
+            left: 15px;
+            top: 17px;
+        }
+        .shaddow{
+            background-color: #d19da6;
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            position: absolute;
+            left: 0px;
+            top: 0;
+            opacity: 0.4;
+            cursor:pointer;
+        }
+        .right_box{
+            position: absolute;
+            left: 593px;
+            top: 198px;
+        }
+        .big_shaddow{
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            overflow: hidden;
+            position: absolute;
+        }
+        .big_pic{
+            position: absolute;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="bg">
+    <div class="left_box">
+        <div class="small_pic">
+            <div class="shaddow"></div>
+        </div>
+    </div>
+    <div class="right_box">
+        <div class="big_shaddow">
+            <img src="images/bg.png" class="big_pic"/>
+        </div>
+    </div>
+</div>
+<script>
+    var shaddow=document.getElementsByClassName('shaddow')[0];
+    var small_pic=document.querySelector('.small_pic');
+
+    var big_shaddow=document.querySelector('.big_shaddow');
+    var big_pic=document.querySelector('.big_pic');
+
+    //生成大图片的大小
+    //获取左边图阴影占小图的宽和高的比例
+    var scallW=shaddow.offsetWidth/small_pic.offsetWidth;
+    var scallH=shaddow.offsetHeight/small_pic.offsetHeight;
+    //根据比例生成右边大图片的大小
+    big_pic.style.width=big_shaddow.offsetWidth/scallW+'px';
+    big_pic.style.height=big_shaddow.offsetHeight/scallH+'px';
+
+    //鼠标移动
+    shaddow.style.display='none';
+    small_pic.onmousemove=function(ev){
+        shaddow.style.display='block';
+        big_pic.style.display='block';
+        var l=ev.clientX-small_pic.getBoundingClientRect().left-shaddow.offsetWidth/2;
+        var t=ev.clientY-small_pic.getBoundingClientRect().top-shaddow.offsetHeight/2;
+        if(l<=0){
+            l=0
+        }
+        if(l>small_pic.clientWidth-shaddow.offsetWidth){
+            l=small_pic.clientWidth-shaddow.offsetWidth
+        }
+        if(t<=0){
+            t=0
+        }
+        if(t>=small_pic.clientHeight-shaddow.offsetHeight){
+            t=small_pic.clientHeight-shaddow.offsetHeight
+        }
+        console.log(ev.clientX-small_pic.getBoundingClientRect().left,small_pic.offsetWidth)
+        if(ev.clientX-small_pic.getBoundingClientRect().left==small_pic.offsetWidth){
+            big_pic.style.display='none';
+            return;
+        }
+        //小的可以移动的最大left
+        var maxL=small_pic.clientWidth-shaddow.offsetWidth;
+        //小的可以移动的最大top
+        var maxT=small_pic.clientHeight-shaddow.offsetHeight;
+        //可移动的left比例
+        var scalL=l/maxL;
+        //可移动的top比例
+        var scalT=t/maxT;
+        //大图可移动的最大left
+        var max_bigL=big_pic.clientWidth-big_shaddow.offsetWidth;
+        //大图可移动的最大top
+        var max_bigT=big_pic.clientHeight-big_shaddow.offsetHeight;
+        //大图的left值
+        var big_imgL=scalL*max_bigL;
+        //大图的top值
+        var big_imgT=scalT*max_bigT;
+        big_pic.style.left=(-big_imgL)+'px';
+        big_pic.style.top=(-big_imgT)+'px';
+
+        shaddow.style.left=l+'px';
+        shaddow.style.top=t+'px';
+        small_pic.onmouseleave=function(){
+            big_pic.style.display='none';
+            shaddow.style.display='none';
+        }
+    };
+</script>
+</body>
+</html>
