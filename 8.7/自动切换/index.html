@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>自动切换</title>
+    <style>
+        body{
+            margin:0;
+            font-family:"微软雅黑";
+        }
+        ul,li{
+            margin:0;
+            padding:0;
+            list-style:none;
+        }
+        .clearFix:after{
+            display: block;
+            content:'';
+            clear:both;
+        }
+        .warp{
+            position: relative;
+            width: 1200px ;
+            height: 800px;
+            box-shadow:2px 2px 20px #949493;
+            margin:50px auto;
+            background: url(images/automatic_bg.png) no-repeat
+        }
+        .main{
+            position: absolute;
+            top:50%;
+            left: 50%;
+            margin-top:-130px;
+            margin-left: -225px;
+            width: 450px;
+            height: 260px;
+            background-color:#ffb746;
+            box-shadow:2px 2px 4px #ffc768;
+        }
+        .tab>li{
+            float: left;
+            line-height: 40px;
+            color:#333;
+            background: #fff7e2;
+            text-align: center;
+            width: 33.33%;
+            border-right:1px solid #ffdea3;
+            box-sizing:border-box;
+            cursor:pointer;
+        }
+        .tab li.active{
+            color:#fff;
+            background: none;
+        }
+        .tab>li:nth-of-type(3){
+            border:none;
+        }
+        .content{
+            padding:24px 0 0 20px;
+            display: none;
+        }
+        .contentImg{
+            float: left;
+            width: 178px;
+            height: 176px;
+            border:2px solid #fff7e2;
+        }
+        .contentImg img{
+            display: none;
+        }
+        .contentTxt{
+            float: left;
+            color:#333;
+            color:#fff;
+            font-size: 14px;
+        }
+        .contentTxt li{
+            width: 210px;
+            line-height: 60px;
+            padding-left: 20px;
+            cursor: pointer;
+        }
+        .contentTxt li.active{
+            color:#333;
+            background: #fff7e2;
+        }
+        .contentTxt li:hover{
+            color:#333;
+        }
+    </style>
+</head>
+<body>
+<section class="warp">
+    <div class="main">
+        <ul class="tab clearFix">
+            <li>专题</li>
+            <li>视频</li>
+            <li>图片</li>
+        </ul>
+        <div class="content-list">
+            <div class="content clearFix">
+                <div class="contentImg">
+                    <img src="images/auto_pic.png" alt="">
+                    <img src="images/2.jpg" alt="">
+                    <img src="images/auto_pic.png" alt="">
+                </div>
+                <div class="contentTxt">
+                    <ul>
+                        <li>
+                            奇虎360纽交所上市11
+                        </li>
+                        <li>
+                            2011年IT领袖峰会
+                        </li>
+                        <li>
+                            CCBN召开 助三网融合
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="content clearFix">
+                <div class="contentImg">
+                    <img src="images/2.jpg" alt="">
+                    <img src="images/auto_pic.png" alt="">
+                    <img src="images/auto_pic.png" alt="">
+                </div>
+                <div class="contentTxt">
+                    <ul>
+                        <li>
+                            奇虎360纽交所上市11
+                        </li>
+                        <li>
+                            2011年IT领袖峰会
+                        </li>
+                        <li>
+                            CCBN召开 助三网融合
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="content clearFix">
+                <div class="contentImg">
+                    <img src="images/auto_pic.png" alt="">
+                    <img src="images/auto_pic.png" alt="">
+                    <img src="images/2.jpg" alt="">
+                </div>
+                <div class="contentTxt">
+                    <ul>
+                        <li>
+                            奇虎360纽交所上市11
+                        </li>
+                        <li>
+                            2011年IT领袖峰会
+                        </li>
+                        <li>
+                            CCBN召开 助三网融合
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    //初始化数据
+    var lists=document.querySelectorAll('.content-list .content');
+    var imgs=document.querySelectorAll('.contentImg img');
+    var tabs=document.querySelectorAll('.tab li');
+
+    //初始化数据
+ var current=0;
+ var tab=0;
+    show();
+    auto();
+  function show(){
+      current=0;
+        for(var i=0;i<tabs.length;i++){
+            tabs[i].className='';
+            tabs[tab].className='active';
+
+            lists[i].style.display='';
+            lists[tab].style.display='block';
+        }
+      //获取当前content下所有的li
+      var lis=lists[tab].querySelectorAll('li');
+      var imgs=lists[tab].querySelectorAll('.contentImg img');
+      for(var i=0;i<lis.length;i++){
+          lis[i].className='';
+          imgs[i].style.display='';
+          lis[current].className='active';
+          imgs[current].style.display='block';
+      }
+  }
+//每一个content自动切换
+    var timer;
+    function auto(){
+        timer=setInterval(function(){
+            current++;
+            var lis=lists[tab].querySelectorAll('.contentTxt li');
+            var imgs=lists[tab].querySelectorAll('.contentImg img');
+
+            if(current>=lis.length){//li循环完后切换到下一个tab
+                tab++;
+                if(tab>=tabs.length){
+                    tab=0
+                }
+                show();
+            }
+            for(var i=0;i<lis.length;i++){
+                lis[i].className='';
+                imgs[i].style.display='';
+
+                lis[current].className='active';
+                imgs[current].style.display='block';
+            }
+        },1000)
+    }
+
+//鼠标移入移出事件
+    for(var i=0;i<tabs.length;i++){
+        tabs[i].index=i;
+        //鼠标移入
+        tabs[i].onmouseover=function(){
+            clearInterval(timer);
+            tab=this.index;
+            for(var i=0;i<tabs.length;i++){
+                tabs[i].className='';
+                tabs[tab].className='active';
+
+                lists[i].style.display='';
+                lists[tab].style.display='block';
+            }
+            //获取当前content下所有的li
+            var lis=lists[tab].querySelectorAll('li');
+            var imgs=lists[tab].querySelectorAll('.contentImg img');
+            for(var i=0;i<lis.length;i++){
+                lis[i].className='';
+                imgs[i].style.display='';
+                lis[current].className='active';
+                imgs[current].style.display='block';
+            }
+        };
+
+        //鼠标移开
+        tabs[i].onmouseout=function(){
+            tab=this.index;
+            auto();
+        }
+    }
+
+//li的效果
+for(var i=0;i<lists.length;i++){
+    list(lists[i])
+}
+   function list(list){
+       var lis=list.querySelectorAll('li');
+       for(var i=0;i<lis.length;i++){
+           lis[i].onmouseover=function(){
+               clearInterval(timer);
+               for(var j=0;j<lis.length;j++){
+                   lis[j].className=''
+               }
+               this.className='active';
+           };
+           lis[i].index=i;
+           lis[i].onmouseout=function(){
+               current=this.index;
+               auto();
+           }
+       }
+   }
+
+
+</script>
+</body>
+</html>
