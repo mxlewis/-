@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/main.css">
+    <script src="../../../utils.js"></script>
+</head>
+<body>
+<section class="wrap">
+    <div class="wrap-left">
+        <ul class="list">
+            <li>
+                <span>jQuery</span>
+                <div class="btn">
+                    <a href="javascript:;"  class="up">上移</a>
+                    <a href="javascript:;" class="down">下移</a>
+                </div>
+            </li>
+            <li>
+                <span>AJAX</span>
+                <div class="btn">
+                    <a href="javascript:;"  class="up">上移</a>
+                    <a href="javascript:;" class="down">下移</a>
+                </div>
+            </li>
+            <li>
+                <span>JS基础-2</span>
+                <div class="btn">
+                    <a href="javascript:;"  class="up">上移</a>
+                    <a href="javascript:;" class="down">下移</a>
+                </div>
+            </li>
+            <li>
+                <span>移动端实战</span>
+                <div class="btn">
+                    <a href="javascript:;"  class="up">上移</a>
+                    <a href="javascript:;" class="down">下移</a>
+                </div>
+            </li>
+            <li>
+                <span>canvas游戏</span>
+                <div class="btn">
+                    <a href="javascript:;"  class="up">上移</a>
+                    <a href="javascript:;" class="down">下移</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <div class="wrap-right">
+        <ul class="list">
+            <li>
+                <span>jQuery</span>
+                <div class="btn">
+                    <a href="javascript:;"  class="up"></a>
+                    <a href="javascript:;" class="down"></a>
+                </div>
+            </li>
+            <li>
+                <span>小程序</span>
+                <div class="btn">
+                    <a href="javascript:;"  class="up"></a>
+                    <a href="javascript:;" class="down"></a>
+                </div>
+            </li>
+            <li>
+                <span>jQuery</span>
+                <div class="btn">
+                    <a href="javascript:;"  class="up"></a>
+                    <a href="javascript:;" class="down"></a>
+                </div>
+            </li>
+            <li>
+                <span>面向对象-上</span>
+                <div class="btn">
+                    <a href="javascript:;"  class="up"></a>
+                    <a href="javascript:;" class="down"></a>
+                </div>
+            </li>
+            <li>
+                <span>面向对象-下</span>
+                <div class="btn">
+                    <a href="javascript:;"  class="up"></a>
+                    <a href="javascript:;" class="down"></a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</section>
+<script>
+    var downs=document.getElementsByClassName('down')[0];
+    var left=document.getElementsByClassName('wrap-left')[0];
+    var list=left.getElementsByClassName('list')[0];
+    var lis=list.children;
+
+//布局转换
+    var arr=[];
+    for(var i=0;i<lis.length;i++){
+        arr.push(lis[i].offsetTop)
+    }
+    for(var i=0;i<lis.length;i++){
+        lis[i].style.margin=0;
+        lis[i].style.position='absolute';
+        lis[i].style.top=arr[i]+'px';
+//下移动
+        lis[i].lastElementChild.lastElementChild.onclick=function(){
+            var parent=this.parentNode.parentNode;//获取li
+            var next=parent.nextElementSibling;//获取下一个兄弟节点
+
+            if(next){
+                list.insertBefore(next,parent);
+            }else{
+                list.insertBefore(parent,this.parentNode.parentNode.parentNode.firstElementChild);
+            }
+
+            arr.forEach(function(item,i){
+              mTween(lis[i],{top:item},200,'linear')
+            })
+        };
+//上移
+        lis[i].lastElementChild.firstElementChild.onclick=function(){
+            var parent=this.parentNode.parentNode;//获取li
+            var prev=parent.previousElementSibling;//获取上一个兄弟节点
+
+            if(prev){
+                list.insertBefore(parent,prev);
+            }else{
+                list.appendChild(parent);
+            }
+
+            arr.forEach(function(item,i){
+                mTween(lis[i],{top:item},200,'linear')
+            })
+        };
+    }
+
+
+</script>
+</body>
+</html>
