@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        html,body{
+            width: 100%;
+            height: 100%;
+            margin: 0;
+        }
+        body{
+            background: url(img/zpbg.png) no-repeat center center;
+            background-size: cover;
+            display: flex;
+        }
+        ul,li{
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        p{
+            margin: 0;
+        }
+        a{
+            text-decoration: none;
+            color:#b6bdcf;
+        }
+        #content{
+            width: 700px;
+            height: 460px;
+            border-radius: 10px;
+            border: 1px solid #30343f;
+            margin: auto;
+            background: url(img/logo.png) no-repeat 25px 25px #252934;
+            box-sizing: border-box;
+            padding: 84px 0px 0px 25px;
+        }
+        #leftList{
+            float: left;
+            width: 60px;
+            padding-right: 12px;
+            height: 100%;
+            background: url(img/leftListBg.png) no-repeat right top;
+        }
+        #leftList li{
+            text-align: right;
+            height: 68px;
+            padding-top: 12px;
+            color: #6a7686;
+            font: 10px/18px "微软雅黑";
+        }
+        #leftList li span{
+            font-size: 12px;
+            display: block;
+            cursor: pointer;
+        }
+        #leftList .active span{
+            color: #ff2c4f;
+        }
+        #right{
+            width: 600px;
+            height: 100%;
+            float: left;
+        }
+        #rightList li{
+            height: 82px;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 20px 20px 20px 20px;
+            position: relative;
+            cursor: pointer;
+        }
+        #rightList li:hover{
+            background-color: #1e212a;
+        }
+        #rightList li:hover .num{
+            color: #ff2c4f;
+        }
+        #rightList li:hover:before{
+            content: "";
+            width: 2px;
+            height: 54px;
+            position: absolute;
+            background-color: #ff2c4f;
+            left: -3px;
+            top: 10px;
+        }
+        #rightList li:after{
+            content: "";
+            width: 543px;
+            height: 1px;
+            position: absolute;
+            bottom: 0px;
+            right: 25px;
+            background:url(img/lineBg.png) repeat-x;
+        }
+        #rightList .num{
+            font-size: 30px;
+            font-family: arial;
+            color:#6a7686;
+            float: left;
+            width: 48px;
+            height: 40px;
+            border-right: 1px solid #303642;
+        }
+        #rightList .list{
+            float: left;
+            width: 500px;
+            margin-left: 6px;
+            font-size: 14px;
+            color: #b6bdcf;
+            font-family: "微软雅黑";
+        }
+        #rightList .list span{
+            float: left;
+        }
+
+        .list>a:nth-of-type(1){
+            height: 26px;
+            float: none;
+            font-size: 14px;
+        }
+        .job{
+            margin-right: 15px;
+        }
+        #rightList .list time{
+            float: right;
+            color: #606a7a;
+        }
+        .list .text{
+            float: left;
+            width: 430px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .list a{
+            float: right;
+            font-size: 12px;
+        }
+        nav{
+            font-size: 0px;
+            text-align: center;
+        }
+        nav a{
+            font: 12px/46px "微软雅黑";
+            display: inline-block;
+            vertical-align: middle;
+            width: 24px;
+        }
+        nav a.active{
+            color: #eb2a4b;
+        }
+    </style>
+</head>
+<body>
+<div id="content">
+    <ul id="leftList">
+        <!-- <li><span>社会招聘</span>society</li>
+        <li class="active"><span>校园招聘</span>campus</li> -->
+    </ul>
+    <div id="right">
+        <ul id="rightList">
+            <!-- <li>
+                <span class="num">01</span>
+                <div class="list">
+                    <a href=""><span class="job">职位需求：前端开发工程师</span><span>需求人数：2名</span><time>2014-04-10</time></a>
+                    <p><span class="text">岗位要求：布拉布拉布拉一大段话布拉布拉布拉一大段话布拉布拉布拉一大段话</span><a href="javascript:;">查看详情>></a></p>
+                </div>
+            </li> -->
+        </ul>
+        <nav id="nav">
+					<span id="pagesBox">
+						<!-- <a class="active" href="javascript:;">1</a>
+						<a href="javascript:;">2</a>
+						<a href="javascript:;">3</a>
+						<a href="javascript:;">4</a> -->
+					</span>
+        </nav>
+    </div>
+</div>
+<script src="js/data.js"></script>
+<script>
+    var leftList=document.getElementById('leftList');
+    var rightList=document.getElementById('rightList');
+    var as=pagesBox.getElementsByTagName('a');
+    var lis=leftList.getElementsByTagName('li');
+
+//生成左侧结构
+    var leftHtml='';
+    data.list.forEach(function(item,index){
+        leftHtml+=`
+        <li class="${index==0 ? 'active': ''}"><span>${item.text}</span>${item.eng}</li>
+        `
+    });
+
+    leftList.innerHTML=leftHtml;
+
+
+
+//生成右侧结构
+function rightHtml(hash,group){
+    var page=hash.substr(1);//根据hash值对应当前的page页
+    var start=(page-1)*4;
+    var end=start+4;
+
+    //渲染页面
+    var rightHtml='';
+    group.slice(start,end).forEach(function(item){
+        rightHtml+=`
+            <li>
+                <span class="num">0${item.num}</span>
+                <div class="list">
+                    <a href=""><span class="job">职位需求：${item.job}</span><span>需求人数：${item.pNum}名</span><time>${item.data}</time></a>
+                    <p><span class="text">${item.ask}</span><a href="javascript:;">查看详情>></a></p>
+                </div>
+            </li>
+        `
+    });
+
+    rightList.innerHTML=rightHtml;
+};
+//    rightHtml(0,4);
+//    0,4     (page-1)*4 (page-1)*4+4
+//    4,8     2-1
+//    8,12    3
+
+
+//根据数据生成页码
+function page(group){
+    var total_page=Math.ceil(group.length/4);//总页码数
+    var pagesBox=document.getElementById('pagesBox');
+
+    var nav_html='';
+    for(var i=1;i<total_page+1;i++){
+        nav_html+=`
+            <a class="${i===1 ? 'active':''}" href="javascript:;">${i}</a>
+        `
+    }
+    pagesBox.innerHTML=nav_html;
+
+    //点击页码显示当前页
+
+    for(var i=0;i<as.length;i++){
+        as[i].index=i;
+        as[i].onclick=function(){
+            for(var j=0;j<as.length;j++){
+                as[j].className='';
+            }
+            this.className='active';
+            prev=this.index;
+            var hash=window.location.hash='#'+(this.index+1);//点击当页,设置当前hash值为页码数
+            rightHtml(hash,group);//渲染html
+        };
+    }
+};
+
+
+
+
+//页面刷新的时候获取search值
+    var search=window.location.search;
+    if(search===''){
+        window.location.search='?world';
+        reset(data.world)
+    }else if(search==='?world'){
+        reset(data.world)
+    }else{
+        reset(data.school)
+    }
+//刷新的时候根据search值渲染页面
+function reset(group){
+    var hash=window.location.hash;
+    if(!window.location.hash){//如果没有hash值，默认为第一页
+        window.location.hash='#1';
+        rightHtml('#1',group);
+        page(group);
+    }else{//有hash值，则为当时显示的页码数
+        if(group==data.world){//社会招聘只有3页，所以比3大了就return
+            if(hash.slice(1)>Math.ceil(data.world.length/4)){
+//                for(var i=0;i<as.length;i++){
+//                    as[i].className='';
+//                }
+//                page(group);
+//                for(var i=0;i<as.length;i++){
+//                    as[i].className='';
+//                }
+                window.location.hash='#1';
+                rightHtml('#1',group);
+                page(group);
+                return;
+            }
+        }
+            window.location.hash=hash;
+            rightHtml(hash,group);//渲染html
+            page(group);//渲染page页
+
+
+
+        //要显示的页码数也要选中状态
+        for(var i=0;i<as.length;i++){
+            as[i].className='';
+        }
+        var current_page=hash.slice(1);
+        as[current_page-1].className='active';
+    }
+
+    for(var i=0;i<lis.length;i++){
+        lis[i].className=''
+    }
+    //刷新后，当前类目显示背景色
+    if(group==data.world){
+        lis[0].className='active';
+    }else{
+        lis[1].className='active';
+    }
+};
+
+
+
+
+//社会和校园招聘点击切换背景色以及渲染页面
+    var lis=leftList.getElementsByTagName('li');
+    lis[0].onclick=function(){
+        //当前的添加背景色
+        for(var i=0;i<lis.length;i++){
+            lis[i].className='';
+        }
+        this.className='active';
+
+        //获取search值，渲染页面
+        window.location.search='?world';
+        reset(data.world);
+    };
+    lis[1].onclick=function(){
+        //当前的添加背景色
+        for(var i=0;i<lis.length;i++){
+            lis[i].className='';
+        }
+        this.className='active';
+        //获取search值，渲染页面
+        window.location.search='?school';
+        reset(data.school);
+    };
+
+</script>
+</body>
+</html>
