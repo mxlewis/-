@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        .clearfix{
+            *zoom:1;
+        }
+        .clearfix:after{
+            content: "";
+            display: block;
+            clear: both;
+        }
+        .fr{
+            float: right;
+        }
+        .fl{
+            float: left;
+        }
+        .box{
+            width: 1000px;
+            padding-top: 145px;
+            height: 555px;
+            background: url("bg.jpg");
+            margin: 0 auto;
+        }
+        .head{
+            position: relative;
+        }
+        .head .grow,.head .random{
+            position: absolute;
+            width: 150px;
+            height: 40px;
+            border: 1px solid #998ccb;
+            background-color: #c4c2de;
+            border-radius: 27px;
+            color: #332d52;
+            outline:none;
+
+        }
+        .head button:nth-of-type(1){
+            margin-left: 350px;
+        }
+        .head button:nth-of-type(2){
+            margin-left: 587px;
+        }
+        .content{
+            margin-top: 53px;
+            margin-left: 135px;
+        }
+        .content div{
+            width: 150px;
+            height: 163px;
+            margin-right: 45px;
+            margin-top: 45px;
+        }
+    </style>
+</head>
+<body>
+<div class="box">
+    <div class="head">
+        <button class="grow">从小到大</button>
+        <button class="random">打乱顺序</button>
+    </div>
+    <div class="content clearfix">
+        <div class="fl">
+            <img src="1.png">
+        </div>
+        <div class="fl">
+            <img src="2.png">
+        </div>
+        <div class="fl">
+            <img src="3.png">
+        </div>
+        <div class="fl">
+            <img src="4.png">
+        </div>
+        <div class="fl">
+            <img src="5.png">
+        </div>
+        <div class="fl">
+            <img src="6.png">
+        </div>
+        <div class="fl">
+            <img src="7.png">
+        </div>
+        <div class="fl">
+            <img src="8.png">
+        </div>
+    </div>
+</div>
+<script>
+    var divs=document.querySelectorAll('.content div');
+    var buttons=document.querySelectorAll('.head button');
+    var random=document.querySelector('.random');
+    var grow=document.querySelector('.grow');
+    var data=[];
+//浮动转定位
+    for(var i=0;i<divs.length;i++){
+        data.push([divs[i].offsetLeft,divs[i].offsetTop]);
+    };
+
+    for(var i=0;i<divs.length;i++){
+        divs[i].style.margin=0;
+        divs[i].style.position='absolute';
+        divs[i].style.left=data[i][0]+'px';
+        divs[i].style.top=data[i][1]+'px';
+    };
+
+//排序
+    var arr=[0,1,2,3,4,5,6,7];
+    //随机打乱
+    random.onclick=function(){
+        for(var i=0;i<buttons.length;i++){
+            buttons[i].style.backgroundColor='';
+            buttons[i].style.color='';
+        }
+        this.style.backgroundColor='#332d52';
+        this.style.color='#fff';
+        arr.sort(function(a,b){
+            return Math.random()-0.5;
+        });
+
+        for(var i=0;i<divs.length;i++){
+            divs[arr[i]].style.left=data[i][0]+'px';
+            divs[arr[i]].style.top=data[i][1]+'px';
+        }
+    };
+
+
+    //从小到大打乱
+    grow.onclick=function(){
+        for(var i=0;i<buttons.length;i++){
+            buttons[i].style.backgroundColor='';
+            buttons[i].style.color='';
+        }
+        this.style.backgroundColor='#332d52';
+        this.style.color='#fff';
+        arr.sort(function(a,b){
+            return a-b;
+        });
+
+        for(var i=0;i<divs.length;i++){
+            divs[arr[i]].style.left=data[i][0]+'px';
+            divs[arr[i]].style.top=data[i][1]+'px';
+        }
+    };
+</script>
+</body>
+</html>
