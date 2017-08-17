@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>百度评分</title>
+    <style>
+        body,h1 {
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+        .starts{
+            overflow:hidden;
+        }
+        .starts span{
+            display: block;
+            float: left;
+            padding: 3px;
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="pingfen.css"/>
+</head>
+<body>
+<div class="wrap">
+    <div class="baidu">
+        <div class="caption">
+            <h1></h1>
+            <span>总体评价</span>
+        </div>
+        <div class="context">
+            <div class="starts">
+                <span>☆</span>
+                <span>☆</span>
+                <span>☆</span>
+                <span>☆</span>
+                <span>☆</span>
+            </div>
+            <div class="info"></div>
+        </div>
+        <div class="tips">
+            小提示：点击星星就能打分
+        </div>
+    </div>
+</div>
+ <!--<script src="pingfen.js"></script>-->
+<script>
+var stars=document.querySelectorAll('.starts span');
+var info=document.querySelector('.info');
+
+var arr = ['极差','较差','一般','良好','极好'];
+var current=-1;
+
+    for(var i=0;i<stars.length;i++){
+        stars[i].index=i;
+        stars[i].onmouseover=function(){
+            num(this.index);
+        };
+        stars[i].onmouseout=function(){
+            num(current);
+        };
+        stars[i].onclick=function(){
+            current=this.index;
+        }
+    };
+
+    function num(n){
+        for(var i=0;i<stars.length;i++){
+            if(i<=n){
+                info.style.display='block';
+                info.innerHTML=arr[i];
+                    if(i<2){
+                        stars[i].style.color='yellow'
+                    }else{
+                        for(var j=0;j<=i;j++){
+                            stars[j].style.color='red'
+                        }
+                    }
+                }else{
+                    stars[i].style.color='';
+                }
+            info.innerHTML=n>=0?arr[n]:'';
+            info.style.display=n>=0?'block':'';
+        }
+    }
+
+</script>
+</body>
+</html>
