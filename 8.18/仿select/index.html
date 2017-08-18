@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        .clearfix{
+            *zoom:1;
+        }
+        .clearfix:after{
+            content: "";
+            display: block;
+            clear: both;
+        }
+        .fr{
+            float: right;
+        }
+        .fl{
+            float: left;
+        }
+        li{
+            list-style: none;
+        }
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        .section{
+            width: 500px;
+            background: url("bg.png") no-repeat;
+            background-size: cover;
+            margin: 0 auto;
+            height: 500px;
+            padding-top: 100px;
+        }
+        .box{
+            width: 346px;
+            border-radius: 18px;
+            background-color: #e4e4fe;
+            display: none;
+            margin-left: 77px;
+        }
+        .result{
+            width: 270px;
+            height: 35px;
+            border-radius: 22px;
+            border: 1px solid #fd635e;
+            background-color: #fff;
+        }
+        .header{
+            padding: 5px;
+        }
+        .btn{
+            width: 60px;
+            height: 35px;
+            border-radius: 20px;
+            background-color: #fd635e;
+            color: #fff;
+            text-align: center;
+            line-height: 35px;
+            margin-left: 3px;
+        }
+        .search{
+            background-color: darkgray;
+            border: 1px solid gray;
+        }
+        .search_bg_2,.search_bg_1{
+            width: 23px;
+            height: 23px;
+            background: url("search-1.png")no-repeat;
+            display: block;
+            margin-left: 8px;
+            margin-top: 7px;
+        }
+        .search_bg_1{
+            background: url("search-2.png")no-repeat;
+        }
+        .box1{
+            display: block;
+            height: 47px;
+        }
+        ul{
+            padding-left: 9px;
+            padding-bottom: 3px;
+        }
+        ul li{
+            width: 270px;
+            height: 30px;
+            border-radius: 10px;
+            line-height: 30px;
+            text-indent: 13px;
+            margin-bottom: 3px;
+        }
+        .header_search .result{
+           background-color: gainsboro;
+            border: 1px solid gray;
+        }
+        .search_value{
+            line-height: 35px;
+            text-indent: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="section">
+    <div class="box box1">
+        <div class="header clearfix header_search">
+            <span class="result fl clearfix">
+                <span class="search_bg_1 fl"></span>
+                <span class="search_value fl"></span>
+            </span>
+            <span class="btn fl">GO</span>
+        </div>
+    </div>
+
+    <div class="box box2">
+        <div class="header clearfix">
+            <span class="result fl">
+                <span class="search_bg_2"></span>
+            </span>
+            <span class="btn fl">GO</span>
+        </div>
+        <ul class="list">
+            <li>html+css</li>
+            <li>html5+css3</li>
+            <li>javascript</li>
+            <li>angular</li>
+            <li>react</li>
+            <li>vue</li>
+            <li>jquery</li>
+            <li>nodejs</li>
+        </ul>
+    </div>
+</div>
+<script>
+    var header_search=document.querySelector('.header_search');
+    var text=header_search.querySelector('.result');
+    var search_value=document.querySelector('.search_value');
+    var box2=document.querySelector('.box2');
+    var box1=document.querySelector('.box1');
+    var list=document.querySelector('.list');
+    var lis=document.getElementsByTagName('li');
+
+
+
+    text.onclick=function(){
+        this.parentNode.parentNode.style.display='none';
+        box2.style.display='block'
+    };
+
+//li移入显示背景色
+    for(var i=0;i<lis.length;i++){
+        lis[i].onmouseover=function(){
+            for(var j=0;j<lis.length;j++){
+                lis[j].style.backgroundColor='';
+                lis[j].style.color=''
+            }
+            this.style.backgroundColor='#fd635e';
+            this.style.color='#fff'
+        };
+    }
+
+//点击li获取值
+    console.log(list)
+    list.onclick=function(ev){
+        var target=ev.target;
+        var val=target.innerHTML;
+        box1.style.display='block';
+        target.parentNode.parentNode.style.display='none';
+        search_value.innerHTML=val;
+    }
+
+</script>
+</body>
+</html>
