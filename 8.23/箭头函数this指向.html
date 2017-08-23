@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script>
+    //箭头函数this指向例子：
+        document.onclick  = function (){
+            setTimeout(function (){
+                console.log(this);//window
+            },1000);
+
+            setTimeout(() => {
+                console.log(this);// this指向拥有定义作用域的this,即document
+            },1000);
+        };
+</script>
+</body>
+</html>
