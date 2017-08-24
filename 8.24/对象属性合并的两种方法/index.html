@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script>
+    //1.用解构赋值方式
+    function fn({w=50,h=50,b='red'}){
+        var div=document.createElement('div');
+        div.style.width=w+'px';
+        div.style.height=h+'px';
+        div.style.background=b;
+        document.body.appendChild(div)
+    }
+    fn({w:100,h:100})
+
+    //2.用Object.assign()合并对象中的属性
+    function fn(obj){
+        var opt={
+            w:50,
+            h:50,
+            b:'red'
+        };
+        opt=Object.assign(opt,obj);//opt目标对象，obj要合并的对象
+        var div=document.createElement('div');
+        div.style.width=opt.w+'px';
+        div.style.height=opt.h+'px';
+        div.style.background=opt.b;
+        document.body.appendChild(div)
+    }
+    fn({w:100});
+</script>
+</body>
+</html>
