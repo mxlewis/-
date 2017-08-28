@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<ul id="box">
+    <li></li>
+    <li></li>
+    <li></li>
+</ul>
+<script>
+//--------------------------------------------------test问题-------------------------------------------------
+//如果正则全局匹配，用test检索的时候，正则身上的属性lastIndex会从上次位置+1
+//解决：re.lastIndex=0
+//        var str='ddd12eee3ert4y';
+//        var re=/\d/g;
+//        console.log(re.test(str));
+//        console.log(re.test(str));
+//        console.log(re.test(str));
+//        console.log(re.test(str));
+//        console.log(re.test(str));
+//--------------------------------------------子项-------------------------------------------------
+//1.正则有无子项在replace的应用
+//            var str='2017-08-25';
+//            var re=/(\d+)\D+(\d+)\D+(\d+)/g;
+//            var re2=/\d+\D+\d+\D+\d+/g;
+//            str.replace(re,function (...data){//有子项的情况下，$0为匹配到的字符，后面参数为每一项，倒数第一项为原字符串，倒数第二项为匹配到字符的下标
+//                console.log(data);
+//            })
+//            str.replace(re2,function($0,$1){//没有子项的情况，参数：匹配到的字符，下标，原字符串
+//                console.log($0);
+//                console.log($1);
+//            })
+//2.()在match中的应用
+//            var str='eea12ca5c';
+//            var re=/a(\d+)c/;//捕获分组信息
+//            console.log(str.match(re));
+//
+//            var str2='eea12ca5c';
+//            var re2=/a(\d+)c/g;//不捕获分组信息
+//            console.log(str2.match(re2));
+//3.不捕获分组信息，正则子项中加?:
+//------------------------------------------元字符-------------------------------------------------------------
+//        \d  数字
+//        \D  非数字
+//        \w	数字、字母、下划线
+//        \W  非数字、字母、下划线
+//        \s  空格
+//        \S  非空格
+//                .   任意字符（除了换行符\n）
+//
+//        一个\w的左边和右边不是\w就存在一个边界符
+//        \b  单词边界
+//        \B  非单词边界
+
+//例子
+//    var str='.\\(今天)';
+//    var re3=/\.|\\|\(|\)/g;
+//    console.log(str.replace(re3,'*'))
+//---------------------------------------两种模式------------------------------------------------
+//贪婪模式：尽可能多的匹配，默认为贪婪模式
+//懒惰模式：尽可能少的匹配,开启懒惰模式 ?
+//        var str='abs55fffffew888s';
+//        var re=/a\w+?s/g;
+//        console.log(str.match(re))
+//------------------------------------------简单的模板引擎---------------------------------------------------------
+//        var data={
+//            name:'wang',
+//            age:20,
+//            sex:'女'
+//        };
+//
+//        var html=`<li>{{name}}</li>
+//                   <li>{{age}}</li>
+//                   <li>{{sex}}</li>`;
+//
+//        function render(html,data){
+//        return html.replace(/\{\{(.+?)\}\}/g,function($0,$1){
+//            console.log($0,$1)
+//            return data[$1]
+//            })
+//        }
+//        box.innerHTML=render(html,data)
+//----------------------------------------------字符串变为弹框-----------------------------------------------------
+//var str2='alert(1)';
+//方法一：
+//var a=new Function(str2);
+//a()
+//方法2：
+//eval(str2)
+</script>
+</body>
+</html>
