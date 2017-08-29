@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        #box1 div,#box2 div{
+            width: 100px;
+            height: 100px;
+            background-color: red;
+            display: none;
+        }
+        .yellow{
+            background-color: yellow;
+        }
+    </style>
+</head>
+<body>
+<div id="box1">
+    <input type="button"value="按钮1"class="yellow">
+    <input type="button"value="按钮2">
+    <input type="button"value="按钮3">
+    <div style="display: block">div1</div>
+    <div>div2</div>
+    <div>div3</div>
+</div>
+<div id="box2">
+    <input type="button"value="按钮1"class="yellow">
+    <input type="button"value="按钮2">
+    <input type="button"value="按钮3">
+    <div style="display: block">div1</div>
+    <div>div2</div>
+    <div>div3</div>
+</div>
+<button id="btn1">点击停止自动播放</button>
+<button id="btn2">点击继续自动播放</button>
+<button id="btn3">播放的停止，停止的播放</button>
+<script>
+    function Tab(parent){
+        this.inputs=parent.querySelectorAll('input');
+        this.divs=parent.querySelectorAll('div');
+        this.n=0;
+        this.timer=null;
+    }
+
+    //点击切换
+    Tab.prototype.init=function(){
+        var that=this;
+        for(var  i=0;i<this.inputs.length;i++){
+            this.inputs[i].index=i;
+            this.inputs[i].onclick=function(){
+                for(var i=0;i<that.inputs.length;i++){
+                    that.inputs[i].className='';
+                    that.divs[i].style.display='none'
+                }
+                this.className='yellow';
+                that.divs[this.index].style.display='block';
+                that.n=this.index
+            }
+        }
+    };
+
+    //自动播放
+    Tab.prototype.autoPlay=function(){
+        this.timer = setInterval(()=>{
+            this.n++;
+            if(this.n>this.inputs.length-1){
+                this.n=0
+            }
+            for(var i=0;i<this.inputs.length;i++){
+                this.inputs[i].className='';
+                this.divs[i].style.display='none'
+        }
+            this.inputs[this.n].className='yellow';
+            this.divs[this.n].style.display='block'
+        },1000)
+    };
+
+    Tab.prototype.stopPlay=function(){
+        clearInterval(this.timer);
+        this.timer=null
+    };
+
+    Tab.prototype.statues=function(){
+        return !!this.timer//取布尔值
+    };
+
+
+    var tab1=new Tab(box1);
+    tab1.init();
+    tab1.autoPlay();
+
+    var tab2=new Tab(box2);
+    tab2.init();
+
+    //btn1的点击事件
+    btn1.onclick=function(){
+        tab1.stopPlay();
+        tab2.stopPlay()
+    };
+    //btn2的点击事件
+    btn2.onclick=function(){
+        tab1.autoPlay();
+        tab2.autoPlay();
+    };
+    //btn3的点击事件
+    btn3.onclick=function(){
+        if(tab1.statues()){
+            tab1.stopPlay();
+        }else{
+            tab1.autoPlay();
+        }
+        if(tab2.statues()){
+            tab2.stopPlay();
+        }else{
+            tab2.autoPlay();
+        }
+    }
+</script>
+</body>
+</html>
