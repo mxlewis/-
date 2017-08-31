@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        div{
+            width: 100px;
+            height: 100px;
+            background: red;
+            position: absolute;
+            left: 0px;
+            top: 0;
+        }
+        #box2{
+            left: 400px;
+            top: 200px;
+        }
+    </style>
+</head>
+<body>
+<div id="box1"></div>
+<div id="box2"></div>
+<script>
+//碰撞
+    class Duang{
+        constructor(){
+            this.downFn=this.downFn.bind(this);
+            this.moveFn=this.moveFn.bind(this);
+            this.upFn=this.upFn.bind(this);
+        }
+        duanginit(ele1,ele2){
+            this.ele1=ele1;
+            this.ele2=ele2;
+            this.ele1.onmousedown=this.downFn;
+        }
+        downFn(ev){
+            this.disX=ev.clientX-this.ele1.offsetLeft;
+            this.disY=ev.clientY-this.ele1.offsetTop;
+            document.onmousemove=this.moveFn;
+            document.onmouseup=this.upFn;
+        }
+        moveFn(ev){
+            this.ele1.style.left=ev.clientX-this.disX+'px';
+            this.ele1.style.top=ev.clientY-this.disY+'px';
+            this.duang()
+        }
+        duang(){
+            this.Rec1=this.ele1.getBoundingClientRect();
+            this.Rec2=this.ele2.getBoundingClientRect();
+            if(this.Rec1.right<this.Rec2.left||this.Rec1.bottom<this.Rec2.top||this.Rec1.left>this.Rec2.right||this.Rec1.top>this.Rec2.bottom){
+                this.ele2.style.background='red'
+            }else{
+                this.ele2.style.background='blue'
+            }
+        }
+        upFn(){
+            document.onmousemove=document.onmouseup=null;
+        }
+
+    }
+    let a=new Duang();
+    a.duanginit(box1,box2)
+
+
+
+</script>
+</body>
+</html>
