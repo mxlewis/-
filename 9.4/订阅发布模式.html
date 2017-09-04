@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script>
+    class People{
+        constructor(){
+            this.fns={}
+        }
+        init(sex,fn){
+            if(!this.fns[sex]){
+                this.fns[sex]=[];
+            }
+            this.fns[sex].push(fn)
+        }
+        act(sex){
+            let arr=this.fns[sex];
+            for(let i=0;i<arr.length;i++){
+                arr[i]()
+            }
+        }
+        remove(sex,fn){
+            for(let i=0;i<this.fns[sex].length;i++){
+                if(this.fns[sex][i]==fn){
+                    this.fns[sex].splice(i,1)
+                }
+            }
+            console.log(this.fns)
+        }
+    }
+    //男
+    let person=new People();
+    person.init('男',fn1);
+    function fn1(){
+        console.log('我是小明')
+    }
+
+    person.init('男',fn3);
+    function fn3(){
+        console.log('我是小李')
+    }
+
+    //女
+    person.init('女',fn2);
+    function fn2(){
+        console.log('我是小红')
+    }
+
+    person.init('女',fn4);
+    function fn4(){
+        console.log('我是小花')
+    }
+    person.remove('女',fn4);
+
+
+    document.onclick=function(){
+        person.act('女');
+    }
+
+</script>
+</body>
+</html>
