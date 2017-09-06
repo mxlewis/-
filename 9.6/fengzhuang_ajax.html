@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+用户名:<input type="text"id="username"name="user"><span id="tip"></span>
+<br>
+邮箱:<input type="text"id="email"name="email">
+<br>
+密码:<input type="text"id="passWord"name="password"><br>
+<button id="btn">提交</button>
+<script>
+    function ajax(options){
+        let defaults=Object.assign({
+            method:'get',
+            url:'',
+            data:'',
+            success(){},
+            error(){}
+        },options);
+
+        if(defaults.url===''){
+            throw  new Error('地址不能为空哦')
+        }
+
+    //ajax
+        let xhr=new XMLHttpRequest();
+
+        if(defaults.method.toLowerCase()==='get'){
+            defaults.url=defaults.url + '?'+defaults.data;
+        }
+        xhr.open(defaults.method,defaults.url,true);
+
+        xhr.onload=function(){//返回
+            if(xhr.status === 200){
+                defaults.success(xhr.responseText);
+            }else{
+                defaults.error(xhr.status,xhr.statusText)
+            }
+        };
+
+        //get和post发送
+        if(defaults.method.toLowerCase()==='get'){
+            xhr.send()
+        }else if(defaults.method.toLowerCase()==='post'){
+            xhr.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+            xhr.send(defaults.data)
+        }
+    }
+
+
+
+    //get请求
+    username.onblur=function(){
+        ajax({
+            method:'get',
+            url:'http://localhost:80/backend/php/get.php',
+            data:'user='+username.value,
+            success(data){
+            console.log(data)
+            },
+            error(status,statusText){
+                console.log(status,statusText);
+            }
+        })
+    }
+
+    //post请求
+    email.onblur=function(){
+        ajax({
+            method:'post',
+            url:'http://localhost:80/backend/php/post.php',
+            data:'user='+email.value,
+            success(data){
+            console.log(data)
+        },
+        error(status,statusText){
+            console.log(status,statusText);
+        }
+    })
+    }
+
+</script>
+</body>
+</html>
