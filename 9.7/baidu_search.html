@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        *{
+            margin: 0px;
+            padding: 0;
+        }
+        li{
+            list-style: none;
+        }
+    </style>
+</head>
+<body>
+<input type="text"id="text">
+<ul id="box">
+    <!--<li><a href=""></a></li>-->
+</ul>
+<script>
+    function fn(data){
+        let s=data.s;
+        console.log(s)
+        let html= s.map(function(item){
+            return `<li><a href="https://www.baidu.com/s?word=${item}" target="_blank">${item}</a></li>`
+        });
+        box.innerHTML=html.join('')
+    }
+    text.oninput=function(){
+        let script=document.createElement('script');
+        script.src=`https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su?wd=${text.value}&cb=fn`;
+
+        document.body.appendChild(script)
+    }
+</script>
+</body>
+</html>
