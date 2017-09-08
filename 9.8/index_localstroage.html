@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<h2>商品</h2>
+<span>鼠标</span>
+<span>键盘</span>
+<span>电脑</span>
+<hr>
+<h2>购物车</h2>
+<ul id="shopping">
+    <!--<li>鼠标</li>-->
+</ul>
+<script>
+    let spans=document.getElementsByTagName('span');
+    let shopping=document.getElementById('shopping');
+
+    //触发
+    window.addEventListener('storage',function(){
+        //获取localStorage中的key
+        let receive_arr=localStorage.getItem('send_arr');
+        receive_arr=JSON.parse(receive_arr);
+
+        arr=receive_arr;
+        //填入到页面中
+        let html=receive_arr.map(function(item){
+            return `<li>${item}</li>`
+        });
+        shopping.innerHTML=html.join('');
+    });
+
+
+    //一上来就获取
+    let data=localStorage.getItem('send_arr');
+    let dataArr=JSON.parse(data);
+    if(data){//如果有数据
+        let html=dataArr.map(function(item){
+            return `<li>${item}</li>`
+        });
+        shopping.innerHTML=html.join('');
+    }else{
+        dataArr=[]
+    }
+
+
+
+    let arr=dataArr;
+    //点击添加
+    for(let i=0;i<spans.length;i++){
+        spans[i].onclick=function(){
+            let newLi=`<li>${this.innerHTML}</li>`;
+            shopping.innerHTML+=newLi;
+
+            //存储
+            arr.push(this.innerHTML);
+            localStorage.setItem('send_arr',JSON.stringify(arr))
+        }
+    }
+
+//练习cookie
+//    let d=new Date();
+//    d.setDate(d.getDate()+5);
+//
+//    document.cookie='"miao"=111; expires='+d.toUTCString();
+</script>
+</body>
+</html>
