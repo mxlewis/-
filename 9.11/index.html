@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>todos</title>
+    <link rel="stylesheet" type="text/css" href="base.css">
+    <link rel="stylesheet" type="text/css" href="index.css">
+</head>
+
+<body>
+    <section class="todoapp">
+        <div>
+            <!-- 头部-->
+            <header class="header" >
+                <h1>todos</h1>
+                <input class="new-todo" placeholder="请输入内容" value="">
+            </header>
+            <!-- 内容-->
+            <section class="main">
+                <!-- 请输入内容-->
+                <input class="toggle-all" type="checkbox">
+                <!--lists -->
+                <ul class="todo-list">
+                    <!-- 一条信息-->
+                    <!--<li class="completed">-->
+                        <!--&lt;!&ndash; 选框部分&ndash;&gt;-->
+                        <!--<div class="view">-->
+                            <!--<input class="toggle" type="checkbox" checked="">-->
+                            <!--<label>多多对对对</label>-->
+                            <!--<button class="destroy"></button>-->
+                        <!--</div>-->
+                        <!--&lt;!&ndash; 编辑部分&ndash;&gt;-->
+                        <!--<input class="edit" value="多多对对对">-->
+                    <!--</li>-->
+                </ul>
+            </section>
+            <!-- 尾部-->
+            <footer class="footer">
+	            <span class="todo-count">
+	            	<strong>0</strong>
+	            	<span>条未选中</span>
+	            </span>
+            </footer>
+        </div>
+    </section>
+
+<script>
+    let new_todo=document.querySelector('.new-todo');
+    let list=document.querySelector('.todo-list');
+    let toggle=document.querySelector('.toggle');
+    let toggle_all=document.querySelector('.toggle-all');
+
+    //一上来拿数据，渲染页面
+    let local_arr=localStorage.getItem('wang');
+    //转换一下
+    let localArr=JSON.parse(local_arr);
+
+    if(local_arr){
+        //渲染页面
+        list.innerHTML=render(localArr);
+
+        //判断一下选中文件的数量，如果和所有li数量相等就全选
+        let allSelect=all_select();//选中的文件
+        let li_num=list.querySelectorAll('li');//所有的li
+        if(allSelect.length===li_num.length){
+            toggle_all.checked=true
+        }else{
+            toggle_all.checked=false
+        }
+        //如果没有数据了，全选消失
+        if(!localArr.length){
+            toggle_all.checked=false
+        }
+    }else{
+        localArr=[]
+    }
+
+
+
+
+    let arr=localArr;
+    //添加新条目
+    document.addEventListener('keyup',addFn);
+    function addFn(ev){
+        if(ev.target.classList.contains('edit')){//如果是编辑状态，则return
+            return
+        }
+        if(ev.keyCode==13){
+            console.log(2)
+            //获取输入的值
+            let val=new_todo.value;
+            if(val==='') return;
+
+            //全选肯定是取消状态
+            toggle_all.checked=false;
+            //数据中插入一条
+            arr.push({
+                'title':val,
+                'checked':false
+            });
+            //回车后清空
+            new_todo.value='';
+            //渲染页面
+            list.innerHTML=render(arr);
+            //本地存储
+            let dataArr=JSON.stringify(arr);
+            localStorage.setItem('wang',dataArr);
+        }
+    };
+
+
+    //单选
+    list.addEventListener('click',checkFn);
+    function checkFn(ev){
+        if(ev.target.classList.contains('toggle')){
+            if(ev.target.checked){//如果没有选中
+                ev.target.checked=true;
+                //如果是选中状态,li添加class为completed
+                ev.target.parentNode.parentNode.classList.add('completed');
+                //数据中也要更新一下
+                for(let i=0;i<arr.length;i++){
+                    if(arr[i].title===ev.target.nextElementSibling.innerHTML){
+                        arr[i].checked=true
+                    }
+                }
+            }else{//如果选中了
+                ev.target.checked=false;
+                ev.target.parentNode.parentNode.classList.remove('completed');
+                //数据中也要更新一下
+                for(let i=0;i<arr.length;i++){
+                    if(arr[i].title===ev.target.nextElementSibling.innerHTML){
+                        arr[i].checked=false
+                    }
+                }
+            }
+            //本地存储也要重置一下
+            let local_arr=JSON.stringify(arr);
+            localStorage.setItem('wang',local_arr);
+
+            //判断一下选中文件的数量，如果和所有li数量相等就全选
+            let allSelect=all_select();//选中的文件
+            let li_num=list.querySelectorAll('li');//所有的li
+            if(allSelect.length==li_num.length){
+                toggle_all.checked=true
+            }else{
+                toggle_all.checked=false
+            }
+        }
+    };
+
+
+    //全选功能
+    toggle_all.onclick=function(){
+        let li_num=list.querySelectorAll('li');//所有的li
+        if(this.checked){//如果不是选中状态
+            for(var i=0;i<li_num.length;i++){
+                let input=li_num[i].querySelector('.toggle');
+                input.checked=true;
+                li_num[i].classList.add('completed');
+                //数据中也要更新一下
+                for(let j=0;j<arr.length;j++){
+                    if(arr[j].title===input.nextElementSibling.innerHTML){
+                        arr[j].checked=true
+                    }
+                }
+            }
+        }else{
+            for(var i=0;i<li_num.length;i++){
+                let input=li_num[i].querySelector('.toggle');
+                input.checked=false;
+                li_num[i].classList.remove('completed');
+
+                //数据中也要更新一下
+                for(let j=0;j<arr.length;j++){
+                    if(arr[j].title===input.nextElementSibling.innerHTML){
+                        arr[j].checked=false
+                    }
+                }
+            }
+            this.checked=false
+        }
+        //本地存储也要重置一下
+        let local_arr=JSON.stringify(arr);
+        localStorage.setItem('wang',local_arr);
+    };
+
+
+
+    //删除功能
+    list.addEventListener('click',delFn);
+    function delFn(ev){
+        if(ev.target.classList.contains('destroy')){
+            ev.target.parentNode.parentNode.remove();
+            //数据中删除一条
+            del(ev.target.previousElementSibling.innerHTML);
+
+            //判断一下选中文件的数量，如果和所有li数量相等就全选
+            let allSelect=all_select();//选中的文件
+            let li_num=list.querySelectorAll('li');//所有的li
+            if(allSelect.length===li_num.length){
+                toggle_all.checked=true
+            }else{
+                toggle_all.checked=false
+            }
+
+            //如果没有数据了，全选消失
+            if(!arr.length){
+                toggle_all.checked=false
+            }
+
+            //本地存储重新设置一下
+            let resetArr=JSON.stringify(arr);
+            localStorage.setItem('wang',resetArr);
+        }
+    };
+
+
+    //双击事件
+    var val;
+    list.addEventListener('dblclick',editFn);
+    function editFn(ev){
+        if(ev.target.nodeName==='LABEL'){
+            ev.target.parentNode.nextElementSibling.style.display='block';
+            val=ev.target.innerHTML;
+            ev.target.parentNode.nextElementSibling.focus();
+            ev.target.parentNode.nextElementSibling.value=val;
+            ev.target.parentNode.parentNode.classList.add('editing');
+        }
+    };
+    //回车修改数据
+    document.addEventListener('keyup',restFn);
+    function restFn(ev){
+        if(ev.target.classList.contains('edit')){//如果是编辑状态
+            if(ev.keyCode==13){
+                let new_val=ev.target.value;//获取input的value值
+                //label显示，input隐藏
+                let lable=ev.target.previousElementSibling.querySelector('label');
+                lable.style.display='block';
+                lable.innerHTML=new_val;
+                ev.target.style.display='none';
+                ev.target.parentNode.classList.remove('editing');
+                //数据更新
+                for(let i=0;i<arr.length;i++){
+                    if(arr[i].title===val){
+                        arr[i].title=new_val
+                    }
+                }
+                //本地存储重新设置一下
+                let resetArr=JSON.stringify(arr);
+                localStorage.setItem('wang',resetArr);
+            }
+        }
+    };
+
+
+
+
+    //获取所有选中的文件
+    function all_select(){
+        let arr=[];
+        let lis=list.querySelectorAll('li');
+        for(let i=0;i<lis.length;i++){
+            if(lis[i].classList.contains('completed')){
+                arr.push(lis[i])
+            }
+        }
+        return arr
+    }
+
+
+    //封装渲染的函数
+    function render(datas){
+        console.log(datas)
+        let html=datas.map(function(item){
+            return `<li class="${item.checked?'completed':''}">
+                        <div class="view">
+                        <input class="toggle" type="checkbox" ${item.checked ? 'checked' : ''}>
+                        <label>${item.title}</label>
+                        <button class="destroy"></button>
+                        </div>
+                    <input class="edit" value="">
+                    </li>`
+        });
+        return html.join('')
+    }
+
+
+    //删除数据
+    function del(title){
+        for(var i=0;i<arr.length;i++){
+            if(arr[i].title===title){
+                arr.splice(i,1)
+            }
+        }
+    }
+
+</script>
+</body>
+
+</html>
