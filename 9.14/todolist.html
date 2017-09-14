@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>todos</title>
+    <link rel="stylesheet" type="text/css" href="base.css">
+    <link rel="stylesheet" type="text/css" href="index.css">
+    <script src="src/vue.js"></script>
+</head>
+
+<body>
+<section class="todoapp">
+    <div>
+        <header class="header" >
+            <h1>todos</h1>
+            <input class="new-todo" placeholder="请输入内容" v-model="val" @keyup.13="addTodoFn">
+        </header>
+        <section class="main"v-show="list.length">
+            <!-- 全选按钮-->
+            <input class="toggle-all" type="checkbox" v-model="isAllSelect" />
+            <ul class="todo-list">
+                <!-- 每条信息-->
+                <li :class="{completed:item.isSelect,editing:item===edit}"
+                    v-for="item,index in render"
+                >
+                    <div class="view">
+                        <input class="toggle" type="checkbox" v-model="item.isSelect">
+                        <label @dblclick="editFn(item)">{{item.title}}</label>
+                        <button class="destroy" @click="delFn(index)"></button>
+                    </div>
+                    <!-- 输入框-->
+                    <input class="edit"
+                           v-model="item.title"
+                           @blur="changeVal(item,index)"
+                           @keyup.13="changeVal(item,index)"
+                           @keyup.esc="cancelFn(item,index)"
+                            >
+                </li>
+            </ul>
+        </section>
+        <footer class="footer"v-if="list.length">
+	            <span class="todo-count">
+		            	<strong>{{unSelectIetm}}</strong>
+		            	<span>条未选中</span>
+		            </span>
+            <ul class="filters">
+                <li><a href="#/all" :class="{selected:fileHash==='all'}">全部</a>
+                </li> <li><a href="#/active":class="{selected:fileHash==='active'}">未选中</a></li>
+                <li><a href="#/completed":class="{selected:fileHash==='completed'}">选中</a></li>
+            </ul>
+        </footer>
+    </div>
+</section>
+<script>
+    let data=localStorage.getItem('wang');
+    if(data){
+        data=JSON.parse(data)
+    }else{
+        data=[]
+    }
+
+
+
+    let vm=new Vue({
+        el:'.todoapp',
+        data:{
+            list:data,
+            val:'',//添加数据的val值
+            edit:'',//正在编辑的那条数据
+            beforeVal:'',//编辑状态之前的值
+            fileHash:''
+        },
+        watch:{
+            list:{
+                deep:true,
+                handler(){
+                    localStorage.setItem('wang',JSON.stringify(data))
+                }
+            }
+        },
+        methods:{
+            addTodoFn(){//添加数据
+                this.list.push({
+                    id:Math.random(),
+                    title:this.val,
+                    isSelect:false
+                });
+                this.val=''
+            },
+            delFn(index){
+                this.list.splice(index,1)
+            },
+            editFn(item){//双击编辑
+                this.edit=item;//存一下编辑的这条数据
+                this.beforeVal=item.title;//存一下之前的值
+            },
+            changeVal(item,index){
+                if(item.title===''){//如果修改的值为空，删除这条数据
+                    this.list.splice(index,1)
+                }
+                this.edit='';//为空后，不绑定class editing
+            },
+            cancelFn(item){
+                item.title=this.beforeVal;
+                this.edit='';
+                this.beforeVal=''
+            }
+        },
+        computed:{
+            //渲染的页面
+            render(){
+                if(this.fileHash==='all'){
+                    return this.list
+                }else if(this.fileHash==='active'){
+                    return this.unSelectIetms
+                }else if(this.fileHash==='completed'){
+                    return this.selectItem
+                }else{
+                    return this.list
+                }
+            },
+            //选中的文件
+            selectItem(){
+                return  this.list.filter(function(item){
+                    return item.isSelect
+                })
+            },
+            //未选中的文件
+            unSelectIetms(){
+                return  this.list.filter(function(item){
+                    return !item.isSelect
+                })
+            },
+            //未选中文件的数量
+            unSelectIetm(){
+                return this.list.length-this.selectItem.length
+            },
+            //判断是否全选
+            isAllSelect:{
+                get(){
+                    return this.list.length===this.selectItem.length
+                },
+                set(result){
+                    this.list.forEach(function(item){
+                        item.isSelect=result
+                    })
+                }
+            }
+        }
+    })
+
+    //获取hash
+    let hash=window.location.hash.slice(2);
+    if(hash){
+        vm.fileHash=hash;
+    }
+    window.onhashchange=function(){
+        let hash=window.location.hash.slice(2);
+        if(hash){
+            vm.fileHash=hash;
+        }
+    }
+</script>
+</body>
+
+</html>
