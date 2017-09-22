@@ -1,0 +1,12 @@
+1. className  只对IE8以上支持
+2. toggleClassName()  //返回值是 true 或者false
+根据toggle判断有没有添加className，模拟单选框的时候应用
+3.事件戳：Date.now()
+4.数据操作中重新渲染页面后，之前选中状态的还需要在选中的状态
+方案一：添加一个属性，渲染后，有属性的添加
+5.data.value用data[value],value是一个变量情况
+6. input光标居中和自动隐藏
+   text-align: center;
+white-space: normal;
+word-break: break-all;
+word-wrap: break-word;
