@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="src/react.development.js"></script>
+    <script src="src/react-dom.development.js"></script>
+    <script src="src/babel.min.js"></script>
+</head>
+<body>
+<div id="box"></div>
+
+<script type="text/babel">
+class Both extends React.Component{
+    constructor(){
+        super();
+        this.state={
+            val:'111'
+        }
+    }
+    changeVal(ev){
+        this.setState({
+            val:ev.target.value
+        })
+    }
+    render(){
+        return(
+                <div>
+                    <input type="text"
+                            value={this.state.val}
+                            onChange={this.changeVal.bind(this)}
+                    />
+                    <p>{this.state.val}</p>
+                </div>
+                )
+
+    }
+}
+
+    ReactDOM.render(
+            <Both/>,
+            document.getElementById('box')
+    )
+</script>
+</body>
+</html>
